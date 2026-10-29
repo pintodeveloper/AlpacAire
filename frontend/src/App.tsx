@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Personal from "./pages/Personal";
 import { ChecklistEPP, ChecklistMantenimiento, ChecklistSupervisor, ListaChequeo, SeguimientoKPI } from "./pages/docs/Formatos";
 import { CronogramaMantenimiento, Documentos, SistemaGases } from "./pages/docs/Documentos";
+import { CostoBeneficio, MatrizRiesgos, PlanEmergencias, PresupuestoPrototipo } from "./pages/docs/Gestion";
 import { ManualUsuario } from "./pages/docs/Manual";
 import Historial from "./pages/Historial";
 import { FlujoMonitoreo, MatrizEPP, MatrizRequisitos, PartesInteresadas, PlanCapacitacion, ProcesosMisionales } from "./pages/docs/Normatividad";
@@ -27,7 +28,7 @@ const RUTAS: Record<string, { permiso: string; el: () => ReactElement; titulo: s
   "/normatividad/flujo-monitoreo": { permiso: "situacion", el: () => <FlujoMonitoreo />, titulo: "Flujo de monitoreo" },
   "/normatividad/procesos-misionales": { permiso: "situacion", el: () => <ProcesosMisionales />, titulo: "Procesos misionales" },
   "/normatividad/matriz-epp": { permiso: "situacion", el: () => <MatrizEPP />, titulo: "Matriz EPP" },
-  "/normatividad/matriz-requisitos": { permiso: "situacion", el: () => <MatrizRequisitos />, titulo: "Matriz de requisitos" },
+  "/normatividad/matriz-requisitos": { permiso: "situacion", el: () => <MatrizRequisitos />, titulo: "Matriz de requisitos legales" },
   "/normatividad/plan-capacitacion": { permiso: "situacion", el: () => <PlanCapacitacion />, titulo: "Plan de capacitación" },
   "/formatos/lista-chequeo": { permiso: "situacion", el: () => <ListaChequeo />, titulo: "Lista de chequeo" },
   "/formatos/checklist-supervisor": { permiso: "situacion", el: () => <ChecklistSupervisor />, titulo: "Checklist supervisor" },
@@ -38,6 +39,10 @@ const RUTAS: Record<string, { permiso: string; el: () => ReactElement; titulo: s
   "/documentos": { permiso: "situacion", el: () => <Documentos />, titulo: "Documentos" },
   "/normatividad/sistema-gases": { permiso: "situacion", el: () => <SistemaGases />, titulo: "Sistema de gases" },
   "/formatos/cronograma-mantenimiento": { permiso: "situacion", el: () => <CronogramaMantenimiento />, titulo: "Cronograma de mantenimiento" },
+  "/normatividad/presupuesto": { permiso: "situacion", el: () => <PresupuestoPrototipo />, titulo: "Presupuesto del prototipo" },
+  "/normatividad/costo-beneficio": { permiso: "situacion", el: () => <CostoBeneficio />, titulo: "Análisis costo-beneficio" },
+  "/normatividad/matriz-riesgos": { permiso: "situacion", el: () => <MatrizRiesgos />, titulo: "Matriz de riesgos" },
+  "/normatividad/plan-emergencias": { permiso: "situacion", el: () => <PlanEmergencias />, titulo: "Plan de emergencias" },
   "/historial": { permiso: "situacion", el: () => <Historial />, titulo: "Historial" },
 };
 

@@ -8,9 +8,13 @@ export const NORMATIVIDAD_DOCS = [
   { to: "/normatividad/flujo-monitoreo", titulo: "Flujo de monitoreo", desc: "De la medición a la alarma, la evacuación y el reingreso." },
   { to: "/normatividad/procesos-misionales", titulo: "Procesos misionales", desc: "Los cinco procesos, de diagnóstico a calibración." },
   { to: "/normatividad/matriz-epp", titulo: "Matriz EPP", desc: "Protección obligatoria por rol en el frente." },
-  { to: "/normatividad/matriz-requisitos", titulo: "Matriz de requisitos", desc: "Artículos del Decreto 1886 que el sistema cubre o apoya." },
+  { to: "/normatividad/matriz-requisitos", titulo: "Matriz de requisitos legales", desc: "Artículos del Decreto 1886 que el sistema cubre o apoya." },
   { to: "/normatividad/plan-capacitacion", titulo: "Plan de capacitación", desc: "Qué aprende cada rol, cuánto dura y en qué orden." },
   { to: "/normatividad/sistema-gases", titulo: "Sistema de gases", desc: "Plano de la red de monitoreo en las galerías." },
+  { to: "/normatividad/presupuesto", titulo: "Presupuesto del prototipo", desc: "Costo por bloque del prototipo y del sistema de 2 km." },
+  { to: "/normatividad/costo-beneficio", titulo: "Análisis costo-beneficio", desc: "Razón B/C con supuestos editables y fuentes." },
+  { to: "/normatividad/matriz-riesgos", titulo: "Matriz de riesgos", desc: "Riesgos del prototipo, nivel P×I y controles." },
+  { to: "/normatividad/plan-emergencias", titulo: "Plan de emergencias", desc: "Procedimientos ante gases, fallas y colapsos." },
 ];
 
 export const FORMATOS_DOCS = [

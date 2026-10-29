@@ -212,7 +212,7 @@ export function MatrizRequisitos() {
   const lista = REQUISITOS.map((r, i) => ({ ...r, n: i + 1 })).filter((r) => filtro === "Todos" || r.estado === filtro);
   const cuenta = (e: string) => REQUISITOS.filter((r) => r.estado === e).length;
   return (
-    <Seccion titulo="Matriz de requisitos legales y seguridad minera" ancho
+    <Seccion titulo="Matriz de requisitos legales" ancho
       meta="Empresa: Minería La Gitana S.A.S. Proyecto: monitoreo con AlpacAire (2026)"
       descripcion="Requisitos legales que el sistema AlpacAire cubre o apoya en labores mineras subterráneas.">
       <div className="chips-vars" role="group" aria-label="Filtrar por estado">

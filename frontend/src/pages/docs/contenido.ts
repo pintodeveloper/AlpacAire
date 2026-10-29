@@ -244,3 +244,137 @@ export const CRONOGRAMA: { codigo: string; objeto: string; it: string; tm: strin
   { codigo: "ALP-401", objeto: "Reemplazo de celdas electroquímicas afectadas", it: "IT-11", tm: "P", semanas: ".........................P.........................P" },
   { codigo: "ALP-402", objeto: "Mantenimiento general de cuneta y cableado blindado", it: "IT-12", tm: "P", semanas: ".........................P.........................P" },
 ];
+
+// ------------------------------------------------------------ Presupuesto del prototipo
+export const PRESUPUESTO: { bloque: string; incluye: string; usd: number; cop: number; prototipo: boolean }[] = [
+  { bloque: "Estación de sensado en el frente (1 unidad)", incluye: "ESP32-S3, microbomba de succión 12 V, válvula, filtros PTFE/bronce, sensores NDIR (CH₄, CO₂), electroquímicos (CO, O₂, H₂S), sonda SHT35 (Ts, HR), barómetro BMP388 (Th), anemómetro (Te), relé de corte y caja IP67.", usd: 455, cop: 1433000, prototipo: true },
+  { bloque: "Troncal enterrada por 2.000 metros", incluye: "2.000 m de manguera HDPE de 1\" (1.700 USD) + 2.000 m de cable industrial blindado RS-485/DC (1.900 USD) + uniones y fuentes (220 USD) + mano de obra de enterrado en cuneta (360 USD).", usd: 4180, cop: 13164000, prototipo: false },
+  { bloque: "Los 40 repetidores cada 50 m (instalados)", incluye: "40 nodos completos (88 USD c/u): ESP32 (con ESP-NOW), módulo RS-485 aislado, relé bypass, batería LiFePO4, caja IP67 con visera y kit de subida vertical en \"T\" desde la cuneta.", usd: 3520, cop: 11849000, prototipo: false },
+  { bloque: "Central de control en superficie", incluye: "Raspberry Pi 5 (4 GB), conversor maestro RS-485 aislado, pantalla de 22\" con el software del triángulo de Coward y mapa de abscisas, UPS y sirena.", usd: 320, cop: 10078000, prototipo: true },
+];
+export const PRESUPUESTO_TOTAL_DOC = { usd: 8475, cop: 26689000 };
+
+// ------------------------------------------------------------ Costo-beneficio (DC-AC): supuestos editables
+export interface SupuestosCB {
+  trm: number; smmlv: number; pension: number; mesadas: number; anosPension: number; tasa: number; horizonte: number;
+  muertesTotal: number; emergencias: number; eventosExp: number; muertesExp: number; anosANM: number;
+  efectividad: number; vev: number; invSistemaUSD: number; invPrototipoUSD: number; mantenimiento: number;
+  detectorUSD: number; muertesCiscuda: number; muertesChapa: number; probabilidad: number; valoracion: "Pensión" | "Social";
+}
+export const SUPUESTOS_CB: SupuestosCB = {
+  trm: 3158.43, smmlv: 1750905, pension: 0.75, mesadas: 12, anosPension: 15, tasa: 0.1225, horizonte: 5,
+  muertesTotal: 1638, emergencias: 1459, eventosExp: 148, muertesExp: 378, anosANM: 15.9,
+  efectividad: 0.4, vev: 128000000, invSistemaUSD: 8475, invPrototipoUSD: 775, mantenimiento: 0.1,
+  detectorUSD: 1049.74, muertesCiscuda: 9, muertesChapa: 15, probabilidad: 0.01, valoracion: "Pensión",
+};
+export const SUPUESTOS_CB_INFO: { clave: keyof SupuestosCB; nombre: string; unidad: string; tipo: string; fuente: string; pct?: boolean; editable?: boolean }[] = [
+  { clave: "trm", nombre: "Tasa de cambio (TRM)", unidad: "COP/USD", tipo: "Dato sustentado", fuente: "TRM oficial vigente del 24 al 26 de octubre de 2026 (Portafolio)", editable: true },
+  { clave: "smmlv", nombre: "Salario mínimo mensual 2026 (SMMLV)", unidad: "COP", tipo: "Dato sustentado", fuente: "Decreto 1469 de 2025 (Buk; Consultorsalud)", editable: true },
+  { clave: "pension", nombre: "Pensión de sobrevivientes por muerte laboral", unidad: "% del IBL", tipo: "Dato sustentado", fuente: "Ley 776 de 2002 y Decreto 1295 de 1994: 75 % del salario base de liquidación (Colmena Seguros)", pct: true, editable: true },
+  { clave: "mesadas", nombre: "Mesadas por año consideradas", unidad: "mesadas", tipo: "Supuesto", fuente: "Simplificación conservadora: no incluye mesadas adicionales; se asume IBL = 1 SMMLV", editable: true },
+  { clave: "anosPension", nombre: "Años de pensión a los beneficiarios", unidad: "años", tipo: "Supuesto", fuente: "Por confirmar con un asesor de riesgos laborales; a mayor duración, mayor beneficio", editable: true },
+  { clave: "tasa", nombre: "Tasa de descuento", unidad: "anual", tipo: "Dato sustentado", fuente: "Tasa de interés del Banco de la República, 12,25 % (Portafolio, octubre de 2026), usada como referencia", pct: true, editable: true },
+  { clave: "horizonte", nombre: "Horizonte de evaluación", unidad: "años", tipo: "Supuesto", fuente: "Vida útil de referencia del equipo; sensores electroquímicos duran cerca de 2 años o más (ficha MGT, Gas Detection Australia)", editable: true },
+  { clave: "muertesTotal", nombre: "Muertes por emergencias mineras 2005 a nov. 2020", unidad: "personas", tipo: "Dato sustentado", fuente: "ANM, estudio de caso de explosión de metano y polvo de carbón (corte 24 nov. 2020)" },
+  { clave: "emergencias", nombre: "Emergencias mineras 2005 a nov. 2020", unidad: "eventos", tipo: "Dato sustentado", fuente: "ANM, mismo documento" },
+  { clave: "eventosExp", nombre: "Explosiones de CH₄ y/o polvo de carbón: eventos", unidad: "eventos", tipo: "Dato sustentado", fuente: "ANM, mismo documento" },
+  { clave: "muertesExp", nombre: "Explosiones de CH₄ y/o polvo de carbón: muertes", unidad: "personas", tipo: "Dato sustentado", fuente: "ANM, mismo documento" },
+  { clave: "anosANM", nombre: "Años del periodo ANM (1 ene. 2005 a 24 nov. 2020)", unidad: "años", tipo: "Dato derivado", fuente: "Cálculo propio a partir del periodo reportado por la ANM" },
+  { clave: "efectividad", nombre: "Meta nacional de reducción de accidentalidad", unidad: "%", tipo: "Dato sustentado", fuente: "Política Nacional de Seguridad Minera: 40 % menos para 2025 y 80 % para 2030 (EFE vía Swissinfo). Se usa como efectividad del sistema", pct: true, editable: true },
+  { clave: "vev", nombre: "Valor estadístico de la vida (aproximación)", unidad: "COP", tipo: "Dato sustentado", fuente: "Rev. Ingenierías Universidad de Medellín: 128 millones de pesos, estimado para seguridad vial en Bogotá; es una aproximación, no un dato minero y no está actualizado", editable: true },
+  { clave: "invSistemaUSD", nombre: "Inversión sistema completo 2 km", unidad: "USD", tipo: "Dato del equipo", fuente: "Documento de costos del equipo (suma de los 4 bloques)", editable: true },
+  { clave: "invPrototipoUSD", nombre: "Inversión del prototipo (bloques 1 y 4)", unidad: "USD", tipo: "Dato del equipo", fuente: "Documento de costos del equipo: estación de sensado (455) + central (320)", editable: true },
+  { clave: "mantenimiento", nombre: "Mantenimiento y calibración anual", unidad: "% de la inversión", tipo: "Supuesto", fuente: "Por validar con el prototipo y los fabricantes de sensores", pct: true, editable: true },
+  { clave: "detectorUSD", nombre: "Precio de un detector multigás portátil", unidad: "USD", tipo: "Dato sustentado", fuente: "BESANTEK BST-MG09 (CH₄, O₂, H₂S, CO), Test Equipment Depot; referencia internacional", editable: true },
+  { clave: "muertesCiscuda", nombre: "Muertes en explosión La Ciscuda (mayo de 2026)", unidad: "personas", tipo: "Dato sustentado", fuente: "ANM vía Reuters: explosión por acumulación de gases en Sutatausa" },
+  { clave: "muertesChapa", nombre: "Muertes en explosión La Chapa (Tasco, Boyacá)", unidad: "personas", tipo: "Dato sustentado", fuente: "ANM: explosión de metano, 15 mineros fallecidos" },
+  { clave: "probabilidad", nombre: "Probabilidad anual de explosión fatal en la mina", unidad: "anual", tipo: "Supuesto", fuente: "No existe cifra pública por mina; se prueba entre 0,5 % y 10 % en el análisis de sensibilidad", pct: true, editable: true },
+];
+export const CONCLUSIONES_CB = [
+  "El problema es grave: las explosiones de metano o polvo de carbón fueron el 10,1 % de las emergencias mineras pero el 23,1 % de las muertes (378 de 1.638, ANM 2005-2020), con unos 2,6 muertos por evento y cerca de 24 muertes por año en el país.",
+  "Solo con la pensión de sobrevivientes (75 % del IBL, Ley 776 de 2002), perder un trabajador cuesta cerca de 106 millones de COP en valor presente; el valor estadístico de la vida de referencia es de 128 millones.",
+  "El prototipo (3,3 millones de COP en valor presente, con mantenimiento) se paga con una probabilidad anual de evento de 0,9 % si se usa el promedio nacional de víctimas, y de 0,2 % si el evento es como La Ciscuda. Con 1 % de probabilidad, su razón beneficio-costo es de 1,2 a 4,1.",
+  "El sistema completo de 2 km (36,4 millones de COP) no se paga solo con estos beneficios: con 1 % de probabilidad la razón es de 0,11 a 0,63. Necesita una probabilidad anual de 1,6 % a 9,4 %, o incluir beneficios no valorados aquí: heridos, paradas de producción, rescate, sanciones y cumplimiento del Decreto 1886 de 2015.",
+  "Límites: no hay cifra pública de probabilidad por mina (es un supuesto que se prueba de 0,5 % a 10 %) y el 40 % de efectividad es la meta nacional de reducción, no una medición del dispositivo. Conviene validar ambos con el piloto.",
+];
+export const FUENTES_CB: [string, string, string][] = [
+  ["Emergencias, muertes y explosiones de metano y polvo 2005-2020", "Agencia Nacional de Minería, estudio de caso de explosión de metano y polvo de carbón", "https://www.anm.gov.co/sites/default/files/DocumentosAnm/estudio-caso-explosion-metano-y-polvo-carbon.pdf"],
+  ["Promedio de 103 muertes por año y meta de reducción de 40 % (2025) y 80 % (2030)", "EFE vía Swissinfo, con datos de la ANM", "https://www.swissinfo.ch/spa/m%C3%A1s-de-1-262-accidentes-mineros-en-colombia-durante-los-%C3%BAltimos-10-a%C3%B1os/48364264"],
+  ["90 % de las muertes en minería subterránea; tasa de accidentes del sector 12,54 por 100 trabajadores en 2022", "El País Cali, con datos de la ANM y el Consejo Colombiano de Seguridad", "https://www.elpais.com.co/colombia/crudo-panorama-de-los-mineros-en-han-fallecido-1857-personas.html"],
+  ["Explosión La Ciscuda: 9 muertos, acumulación de gases (mayo de 2026)", "Reuters, citando a la ANM", "https://979weve.com/?p=835884"],
+  ["Explosión La Chapa: 15 muertos por metano", "ANM vía Miners News", "https://minersnews.net/colombian-regulators-confirm-15-killed-in-recent-mine-explosion/"],
+  ["Salario mínimo 2026: 1.750.905 COP", "Decreto 1469 de 2025 (Buk)", "https://www.buk.co/blog/salario-minimo-2026-en-colombia"],
+  ["Pensión de sobrevivientes de 75 % del IBL por muerte laboral", "Colmena Seguros; Ley 776 de 2002 y Decreto 1295 de 1994", "https://colmenaseguros.com/documents/d/guest/17-proceso-de-pago-de-pension-de-sobrevivientes-por-evento-laboral-mortal"],
+  ["TRM 3.158,43 (24 al 26 de octubre de 2026) y tasa del Banco de la República 12,25 %", "Portafolio", "https://www.portafolio.co/economia/finanzas/precio-del-dolar-en-colombia-divisa-inicia-la-semana-cerca-de-los-3-505113"],
+  ["Valor estadístico de la vida: 128 millones de pesos (seguridad vial, Bogotá)", "Revista Ingenierías Universidad de Medellín", "https://dialnet.unirioja.es/descarga/articulo/4738627.pdf"],
+  ["Detector multigás portátil BESANTEK BST-MG09: 1.049,74 USD", "Test Equipment Depot", "https://www.testequipmentdepot.com/besantek-bst-mg09-heavy-duty-multi-gas-leak-detector-for-ch4-lel-o2-h2s-and-co.html"],
+  ["Vida útil de sensores electroquímicos y NDIR (cerca de 2 años o más)", "Gas Detection Australia, ficha del detector MGT", "https://www.gasdetectionaustralia.com.au/?p=263815"],
+  ["Costos del prototipo y del sistema", "Documento de costos del equipo IMS Alpac", ""],
+];
+
+// ------------------------------------------------------------ Matriz de riesgos (DC-MR)
+export const RIESGO_ESTADOS = ["Controlado", "En mitigación", "Pendiente", "Crítico"];
+export const RIESGOS: { categoria: string; items: { id: string; riesgo: string; causa: string; impacto: string; p: number; i: number; control: string; responsable: string }[] }[] = [
+  { categoria: "Riesgos técnicos y de sensores en el frente", items: [
+    { id: "R-01", riesgo: "Deriva de lectura o descalibración en sensores NDIR (CH₄, CO₂)", causa: "Polvo constante en el frente, vibración de voladuras y humedad", impacto: "Falsas alarmas o falta de detección de concentraciones peligrosas de metano", p: 2, i: 4, control: "Muestreo con bomba 12 V a través de filtros PTFE/bronce y calibración mensual cero/span con gas patrón", responsable: "Técnico de mantenimiento / SST" },
+    { id: "R-02", riesgo: "Saturación o agotamiento prematuro de sensores electroquímicos (CO, O₂, H₂S)", causa: "Exposición continua a humos de voladura y gases corrosivos de mina", impacto: "Pérdida de medición del monóxido de carbono u oxígeno de seguridad", p: 3, i: 4, control: "Bump test semanal, rutina de purga de aire limpio y reemplazo semestral de celdas electroquímicas", responsable: "Técnico electrónico" },
+    { id: "R-03", riesgo: "Ingreso de fango o condensación de agua a la caja electrónica de la estación", causa: "Alta humedad relativa en la galería y filtraciones de agua de roca", impacto: "Cortocircuito en placa ESP32-S3, sensores o sistema de relés", p: 2, i: 5, control: "Envolvente hermética con certificación IP67, prensaestopas sellados y purga diaria de condensado", responsable: "Técnico de mantenimiento" },
+  ] },
+  { categoria: "Riesgos de comunicación y red de transporte (2.000 metros)", items: [
+    { id: "R-04", riesgo: "Interrupción o aplastamiento de la manguera HDPE 1\" / cable RS-485 en cuneta", causa: "Desprendimiento de rocas, tráfico de vagonetas o mantenimiento de vía", impacto: "Pérdida de transmisión de datos en tiempo real hacia la superficie", p: 3, i: 4, control: "Instalación enterrada en cuneta de protección con manguera HDPE de alto impacto y cable blindado RS-485", responsable: "Mantenimiento mina" },
+    { id: "R-05", riesgo: "Falla de comunicación en repetidores RS-485 / ESP-NOW por caída de energía", causa: "Corte del suministro eléctrico principal en la labor subterránea", impacto: "Incapacidad de enviar alertas preventivas al supervisor en superficie", p: 2, i: 4, control: "Nodos equipados con batería LiFePO4 de respaldo y relé de conmutación bypass automática", responsable: "Técnico de sistemas" },
+  ] },
+  { categoria: "Riesgos de hardware en superficie y software de monitoreo", items: [
+    { id: "R-06", riesgo: "Bloqueo o falla del servidor Raspberry Pi 5 en la central de control", causa: "Sobrecalentamiento, falla en tarjeta microSD o fluctuación eléctrica", impacto: "Interrupción del despliegue gráfico del triángulo de Coward y la app", p: 2, i: 4, control: "Servidor con carcasa de disipación, respaldos periódicos en memoria y sistema de alimentación UPS 24/7", responsable: "Responsable de sistemas" },
+    { id: "R-07", riesgo: "Falla en la activación de alarmas locales sonoras/luminosas en el frente", causa: "Desconexión de relé de corte o falla de alimentación a la sirena", impacto: "El minero de frente no recibe la alerta de evacuación inmediata ante gas", p: 2, i: 5, control: "Prueba funcional diaria de sirena y LED desde el frente, complementada con el uso obligatorio del autorrescatador", responsable: "Supervisor SST / minero" },
+  ] },
+  { categoria: "Riesgos operativos y humanos en el frente de trabajo", items: [
+    { id: "R-08", riesgo: "Omisión de la orden de evacuación por parte del supervisor o renuencia del personal", causa: "Falta de capacitación o desconocimiento de los niveles normativos del Dec. 1886", impacto: "Exposición del personal a intoxicación por CO, asfixia o golpe de calor", p: 2, i: 5, control: "Programa de capacitación operativa por rol de 4 días, simulacros con la app y lista de chequeo de campo", responsable: "Supervisor SST / gerencia" },
+  ] },
+];
+export const ESCALA_P: [number, string, string, string][] = [
+  [1, "Raro", "Casi imposible que ocurra durante la operación del prototipo", "Menos de 1 vez al año"],
+  [2, "Improbable", "Podría ocurrir en condiciones extremas de humedad o mina", "1 vez al año"],
+  [3, "Posible", "Evento conocido que ocurre ocasionalmente en labores subterráneas", "1 vez al mes"],
+  [4, "Probable", "Ocurrirá con frecuencia si no se aplica mantenimiento preventivo", "1 vez a la semana"],
+  [5, "Casi seguro", "Se espera que ocurra en casi cualquier turno de trabajo", "Diario"],
+];
+export const ESCALA_I: [number, string, string, string][] = [
+  [1, "Insignificante", "Sin lesiones ni afectación a trabajadores", "Sin pérdida de datos ni falla en componentes"],
+  [2, "Menor", "Primeros auxilios o molestias menores por clima", "Falla menor con reemplazo rápido de filtro o sensor"],
+  [3, "Moderado", "Atención médica sin incapacidad o reubicación temporal", "Interrupción temporal de señal en un sector de la galería"],
+  [4, "Mayor", "Incapacidad o riesgo severo por gases de mina", "Pérdida de transmisión en la troncal principal de 2 km"],
+  [5, "Catastrófico", "Fatalidad o emergencia grave en el frente por intoxicación", "Falla total del sistema de alarma y daño en el frente"],
+];
+
+// ------------------------------------------------------------ Plan de emergencias (DC-PO)
+export const PON_ESTADOS = ["Operativo", "En revisión", "Pendiente", "Inactivo"];
+export const PONS: { categoria: string; items: { codigo: string; escenario: string; criterio: string; frente: string; superficie: string; equipos: string; responsable: string; variable?: string }[] }[] = [
+  { categoria: "Emergencias atmosféricas y de gases en el frente de trabajo", items: [
+    { codigo: "PON-ATM-01", escenario: "Alerta crítica por concentración de metano (CH₄ > 1,0 %)", criterio: "CH₄ ≥ 1,0 % o NDIR AlpacAire en rojo", frente: "Suspender de inmediato trabajos con chispa o eléctricos, avisar al compañero y evacuar hacia la vía de aire limpio.", superficie: "Monitorear el tablero de la app AlpacAire, cortar energía eléctrica de la zona y activar la brigada de ventilación.", equipos: "Autorrescatador de oxígeno/CO, detector portátil de respaldo y lámpara de casco.", responsable: "Supervisor SST / jefe de turno", variable: "ch4" },
+    { codigo: "PON-ATM-02", escenario: "Presencia de monóxido de carbono (CO > 50 ppm)", criterio: "CO ≥ 50 ppm (límite permisible de intoxicación)", frente: "Colocarse inmediatamente el autorrescatador (menos de 30 s), parar labores y evacuar por la ruta de emergencia.", superficie: "Recibir la notificación automática en la app, confirmar el sector afectado y verificar el conteo de personal en superficie.", equipos: "Autorrescatador obligatorio puesto, máscara de escape de CO.", responsable: "Minero de frente / brigada SST", variable: "co" },
+    { codigo: "PON-ATM-03", escenario: "Deficiencia severa de oxígeno (O₂ < 19,5 %)", criterio: "O₂ < 19,5 % (riesgo inminente de asfixia)", frente: "Retirarse inmediatamente del área ciega hacia la galería principal donde circule aire fresco.", superficie: "Validar lecturas en el panel AlpacAire, ordenar presurización o refuerzo del ventilador secundario.", equipos: "Autorrescatador y equipo de circuito cerrado de salvamento.", responsable: "Supervisor SST", variable: "o2" },
+    { codigo: "PON-ATM-04", escenario: "Estrés térmico crítico (temperatura efectiva > 30 °C)", criterio: "Te > 30 °C calculada por SHT35, BMP388 y anemómetro", frente: "Suspender trabajo pesado, hidratarse en el punto de descanso y notificar la elevación de temperatura.", superficie: "Rotar el turno de trabajo, verificar el funcionamiento del sistema de aire de la galería y autorizar descansos.", equipos: "Ropa reflectiva ligera, puntos de hidratación potable.", responsable: "Jefe de turno", variable: "temp_efectiva" },
+  ] },
+  { categoria: "Emergencias técnicas y fallas del sistema prototipo AlpacAire", items: [
+    { codigo: "PON-TEC-01", escenario: "Corte total de señal en la troncal de 2 km o caída de red", criterio: "Pérdida de paquetes RS-485 / ESP-NOW > 2 min", frente: "Verificar si la luz verde local del sensor del frente sigue activa. En caso de duda, detener el avance.", superficie: "Verificar el diagnóstico de repetidores en la app, enviar técnico de inspección por la cuneta y activar muestreo manual.", equipos: "Detector portátil multigás de respaldo, radio de comunicación.", responsable: "Técnico de mantenimiento / sistemas" },
+    { codigo: "PON-TEC-02", escenario: "Corte de energía eléctrica principal en la mina subterránea", criterio: "Corte de fluido eléctrico general", frente: "Mantener la calma, no manipular cables y esperar confirmación de conmutación de alarmas.", superficie: "Confirmar que la Raspberry Pi 5 conmutó a UPS y los 40 repetidores entraron en batería LiFePO4.", equipos: "Lámpara minera de casco cargada, UPS y baterías LiFePO4.", responsable: "Técnico electrónico" },
+  ] },
+  { categoria: "Emergencias mecánicas y eventos estructurales en galería", items: [
+    { codigo: "PON-EST-01", escenario: "Desprendimiento de rocas o colapso en tramo de galería", criterio: "Aplastamiento de cuneta o manguera de monitoreo", frente: "Si la vía principal está bloqueada, dirigirse a la salida alternativa o refugio de salvamento.", superficie: "Localizar la última abscisa reportada por los repetidores AlpacAire y movilizar la brigada de salvamento ANM.", equipos: "Equipos de corte, entibado de emergencia, autorrescatador y camilla.", responsable: "Brigada de salvamento minero / ANM" },
+  ] },
+];
+export const DIRECTORIO: { rol: string; nombre: string; editable: boolean; contacto: string; ubicacion: string; responsabilidad: string }[] = [
+  { rol: "Estación de Salvamento Minero ANM", nombre: "Agencia Nacional de Minería", editable: false, contacto: "Línea nacional 123 / ANM 018000", ubicacion: "Punto de salvamento regional", responsabilidad: "Atención de emergencias y salvamento subterráneo" },
+  { rol: "Supervisor SST de turno", nombre: "", editable: true, contacto: "Radio canal 1 / celular SST", ubicacion: "Boca de mina / superficie", responsabilidad: "Toma de decisiones de evacuación y aviso a brigadas" },
+  { rol: "Jefe de turno / operaciones", nombre: "", editable: true, contacto: "Radio canal 2", ubicacion: "Superficie / frente", responsabilidad: "Coordinación de personal y paro de actividades" },
+  { rol: "Técnico de mantenimiento AlpacAire", nombre: "", editable: true, contacto: "Radio canal 3", ubicacion: "Taller de mantenimiento", responsabilidad: "Soporte técnico, calibración y revisión de troncal" },
+  { rol: "Hospital / centro médico cercano", nombre: "Urgencias salud", editable: false, contacto: "Línea de urgencias directa", ubicacion: "Municipio local", responsabilidad: "Atención médica especializada por gases o accidentes" },
+];
+export const RECURSOS_SALVAMENTO: [string, string, string, string, string][] = [
+  ["Autorrescatadores de oxígeno / CO de repuesto", "Punto de acopio en frente y boca de mina", "1 por trabajador + 20 % de reserva", "Bueno", "Semanal"],
+  ["Detectores portátiles multigás de respaldo", "Oficina SST / central de control", "3 unidades", "Bueno", "Semanal"],
+  ["Camillas de salvamento y botiquín de primeros auxilios", "Estación intermedia y superficie", "2 kits completos", "Bueno", "Mensual"],
+  ["Equipos de respiración autónoma (circuito cerrado)", "Estación de brigada de salvamento", "4 unidades", "Bueno", "Mensual"],
+  ["Sirena de alerta general y altavoces", "Central en superficie (Raspberry Pi 5)", "1 sistema integral", "Bueno", "Diario"],
+];
