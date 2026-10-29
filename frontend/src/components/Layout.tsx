@@ -12,18 +12,29 @@ const MENU = [
     { to: "/situacion", label: "Situación actual", permiso: "situacion" },
     { to: "/frentes", label: "Frentes", permiso: "frentes" },
     { to: "/detalles", label: "Detalles", permiso: "detalles" },
+    { to: "/historial", label: "Historial", permiso: "situacion" },
   ] },
   { grupo: "Roles", items: [
     { to: "/operarios", label: "Operarios", permiso: "operarios" },
     { to: "/obreros", label: "Obreros", permiso: "obreros" },
   ] },
   { grupo: "Exportar", items: [{ to: "/exportar", label: "Exportar PDF", permiso: "exportar" }] },
-];
-
-// Secciones sin subsecciones (por ahora): el título mismo es el enlace.
-const SECCIONES = [
-  { to: "/normatividad", label: "Normatividad y políticas" },
-  { to: "/formatos", label: "Formatos" },
+  { grupo: "Normatividad y políticas", items: [
+    { to: "/normatividad/partes-interesadas", label: "Partes interesadas", permiso: "situacion" },
+    { to: "/normatividad/flujo-monitoreo", label: "Flujo monitoreo", permiso: "situacion" },
+    { to: "/normatividad/procesos-misionales", label: "Procesos misionales", permiso: "situacion" },
+    { to: "/normatividad/matriz-epp", label: "Matriz EPP", permiso: "situacion" },
+    { to: "/normatividad/matriz-requisitos", label: "Matriz requisitos", permiso: "situacion" },
+    { to: "/normatividad/plan-capacitacion", label: "Plan capacitación", permiso: "situacion" },
+  ] },
+  { grupo: "Formatos", items: [
+    { to: "/formatos/lista-chequeo", label: "Lista de chequeo", permiso: "situacion" },
+    { to: "/formatos/checklist-supervisor", label: "Checklist supervisor", permiso: "situacion" },
+    { to: "/formatos/checklist-epp", label: "Checklist EPP", permiso: "situacion" },
+    { to: "/formatos/checklist-mantenimiento", label: "Checklist mantenimiento", permiso: "situacion" },
+    { to: "/formatos/seguimiento-kpi", label: "Seguimiento KPI", permiso: "situacion" },
+    { to: "/formatos/manual-usuario", label: "Manual del usuario", permiso: "situacion" },
+  ] },
 ];
 
 const ESTADO_TXT = { normal: "Todo en orden", alerta: "Alerta", peligro: "Evacuación" } as const;
@@ -67,9 +78,17 @@ function AvisoSonido() {
 export function Layout({ children }: { children: ReactNode }) {
   const { usuario, logout, puede, estado, umbrales } = useSesion();
   const { path } = useRouter();
-  const [abiertos, setAbiertos] = useState<Record<string, boolean>>({ Principal: true, Roles: true, Exportar: true });
+  const [abiertos, setAbiertos] = useState<Record<string, boolean>>(() => ({
+    Principal: true, Roles: true, Exportar: true,
+    "Normatividad y políticas": window.location.pathname.startsWith("/normatividad"),
+    Formatos: window.location.pathname.startsWith("/formatos"),
+  }));
   const [menuMovil, setMenuMovil] = useState(false);
-  useEffect(() => setMenuMovil(false), [path]);
+  useEffect(() => {
+    setMenuMovil(false);
+    const g = MENU.find((m) => m.items.some((i) => i.to === path));
+    if (g) setAbiertos((a) => (a[g.grupo] ? a : { ...a, [g.grupo]: true }));
+  }, [path]);
   if (!usuario) return null;
   const nivel = estado?.nivel;
 
@@ -111,15 +130,10 @@ export function Layout({ children }: { children: ReactNode }) {
               </div>
             );
           })}
-          {SECCIONES.map((sec) => (
-            <div key={sec.to} className="menu__grupo">
-              <Link to={sec.to} className="menu__titulo menu__seccion">{sec.label}</Link>
-            </div>
-          ))}
         </nav>
 
         <div className="menu__pie">
-          <Link to="/ayuda" className="menu__link menu__ayuda">(?) Ayuda</Link>
+          <Link to="/ayuda" className="menu__link menu__ayuda">Ayuda</Link>
           <button className="menu__link menu__salir" onClick={logout}>Cerrar sesión</button>
           <div className="menu__marca">
             <LogoMark size={44} color="var(--pizarra)" />

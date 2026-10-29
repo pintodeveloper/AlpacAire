@@ -31,11 +31,13 @@ def create_app():
 
     from .auth import bp as auth_bp
     from .api import bp as api_bp
+    from .historial import bp as hist_bp
     from .reportes import bp as rep_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(api_bp, url_prefix="/api")
     app.register_blueprint(rep_bp, url_prefix="/api/reportes")
+    app.register_blueprint(hist_bp, url_prefix="/api")
 
     @app.get("/api/salud")
     def salud():

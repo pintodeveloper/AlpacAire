@@ -71,6 +71,15 @@ export default function Situacion() {
         </div>
       </section>
 
+      {nivel === "peligro" && (
+        <p className="aviso-enviado" role="status">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M3 6h18v12H3z M3 7l9 6 9-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+          </svg>
+          Correo, mensaje de WhatsApp y notificación enviadas.
+        </p>
+      )}
+
       {nivel === "peligro" && peligro.length > 0 && (
         <section className="panel panel--peligro">
           <h3 className="panel__titulo">Causa de la evacuación</h3>

@@ -8,7 +8,10 @@ import Exportar from "./pages/Exportar";
 import Frentes from "./pages/Frentes";
 import Login from "./pages/Login";
 import Personal from "./pages/Personal";
-import Seccion from "./pages/Seccion";
+import { ChecklistEPP, ChecklistMantenimiento, ChecklistSupervisor, ListaChequeo, SeguimientoKPI } from "./pages/docs/Formatos";
+import { ManualUsuario } from "./pages/docs/Manual";
+import Historial from "./pages/Historial";
+import { FlujoMonitoreo, MatrizEPP, MatrizRequisitos, PartesInteresadas, PlanCapacitacion, ProcesosMisionales } from "./pages/docs/Normatividad";
 import Situacion from "./pages/Situacion";
 
 const RUTAS: Record<string, { permiso: string; el: () => ReactElement; titulo: string }> = {
@@ -19,14 +22,19 @@ const RUTAS: Record<string, { permiso: string; el: () => ReactElement; titulo: s
   "/obreros": { permiso: "obreros", el: () => <Personal tipo="obrero" />, titulo: "Obreros" },
   "/exportar": { permiso: "exportar", el: () => <Exportar />, titulo: "Exportar PDF" },
   "/ayuda": { permiso: "situacion", el: () => <Ayuda />, titulo: "Ayuda" },
-  "/normatividad": {
-    permiso: "situacion", titulo: "Normatividad y políticas",
-    el: () => <Seccion titulo="Normatividad y políticas" descripcion="Decretos, resoluciones y políticas internas de seguridad que aplican a la mina." />,
-  },
-  "/formatos": {
-    permiso: "situacion", titulo: "Formatos",
-    el: () => <Seccion titulo="Formatos" descripcion="Formatos de inspección, permisos de trabajo y registros de la operación." />,
-  },
+  "/normatividad/partes-interesadas": { permiso: "situacion", el: () => <PartesInteresadas />, titulo: "Partes interesadas" },
+  "/normatividad/flujo-monitoreo": { permiso: "situacion", el: () => <FlujoMonitoreo />, titulo: "Flujo de monitoreo" },
+  "/normatividad/procesos-misionales": { permiso: "situacion", el: () => <ProcesosMisionales />, titulo: "Procesos misionales" },
+  "/normatividad/matriz-epp": { permiso: "situacion", el: () => <MatrizEPP />, titulo: "Matriz EPP" },
+  "/normatividad/matriz-requisitos": { permiso: "situacion", el: () => <MatrizRequisitos />, titulo: "Matriz de requisitos" },
+  "/normatividad/plan-capacitacion": { permiso: "situacion", el: () => <PlanCapacitacion />, titulo: "Plan de capacitación" },
+  "/formatos/lista-chequeo": { permiso: "situacion", el: () => <ListaChequeo />, titulo: "Lista de chequeo" },
+  "/formatos/checklist-supervisor": { permiso: "situacion", el: () => <ChecklistSupervisor />, titulo: "Checklist supervisor" },
+  "/formatos/checklist-epp": { permiso: "situacion", el: () => <ChecklistEPP />, titulo: "Checklist EPP" },
+  "/formatos/checklist-mantenimiento": { permiso: "situacion", el: () => <ChecklistMantenimiento />, titulo: "Checklist mantenimiento" },
+  "/formatos/seguimiento-kpi": { permiso: "situacion", el: () => <SeguimientoKPI />, titulo: "Seguimiento KPI" },
+  "/formatos/manual-usuario": { permiso: "situacion", el: () => <ManualUsuario />, titulo: "Manual del usuario" },
+  "/historial": { permiso: "situacion", el: () => <Historial />, titulo: "Historial" },
 };
 
 export default function App() {
@@ -35,6 +43,8 @@ export default function App() {
   const ruta = RUTAS[path];
 
   useEffect(() => {
+    if (path === "/normatividad") return navigate("/normatividad/partes-interesadas");
+    if (path === "/formatos") return navigate("/formatos/lista-chequeo");
     if (usuario && (!ruta || !puede(ruta.permiso))) navigate("/situacion");
   }, [usuario, path]); // eslint-disable-line
 
