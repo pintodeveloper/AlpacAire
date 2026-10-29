@@ -2,6 +2,11 @@
 set -e
 export FLASK_APP=wsgi.py
 
+# El mismo contenedor sirve como simulador de sensores (MODO=simulador)
+if [ "$MODO" = "simulador" ]; then
+  exec python simulator.py
+fi
+
 # Espera a que PostgreSQL acepte conexiones
 python - <<'PY'
 import time
@@ -19,4 +24,4 @@ for i in range(60):
 PY
 
 flask seed --dias "${SEED_DIAS:-30}"
-exec gunicorn -w "${GUNICORN_WORKERS:-3}" -b 0.0.0.0:5000 --timeout 120 --access-logfile - wsgi:app
+exec gunicorn -w "${GUNICORN_WORKERS:-3}" -b "${GUNICORN_BIND:-0.0.0.0:5000}" --timeout 120 --access-logfile - wsgi:app

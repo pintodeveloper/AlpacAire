@@ -111,23 +111,30 @@ cd frontend; npm install; npm run dev     # http://localhost:5173
 > Para el desarrollo local, el puerto 5432 de la base no está publicado; agrega `ports: ["5432:5432"]` al
 > servicio `db` si lo necesitas.
 
-## Despliegue
+## Despliegue en Railway (recomendado)
+
+Un proyecto de Railway con 4 servicios, todos desde este repositorio:
+
+| Servicio (nombre exacto) | Origen | Root Directory | Variables |
+|---|---|---|---|
+| `Postgres` | Database → PostgreSQL | — | (las crea Railway) |
+| `api` | GitHub repo | `/backend` | `DATABASE_URL=${{Postgres.DATABASE_URL}}`, `GUNICORN_BIND=[::]:5000`, `JWT_SECRET_KEY`, `SENSOR_API_KEY`, `SEED_PASSWORD` |
+| `simulador` | GitHub repo | `/backend` | `MODO=simulador`, `API_URL=http://api.railway.internal:5000`, `SENSOR_API_KEY=${{api.SENSOR_API_KEY}}` |
+| `web` | GitHub repo | `/frontend` | `API_UPSTREAM=http://api.railway.internal:5000`, opcional `VITE_DEMO_PASSWORD` |
+
+Solo `web` lleva dominio público (Settings → Networking → Generate Domain). Cada push a `main` redespliega.
+
+## Despliegue en un servidor propio
 
 Cada push a `main` ejecuta GitHub Actions: prueba la API contra PostgreSQL (`backend/tests/smoke_test.py`),
 compila el frontend y publica las imágenes en `ghcr.io/pintodeveloper/alpacaire-api` y `alpacaire-web`.
-
-**En un servidor (por ejemplo EC2 con Ubuntu):**
 
 ```bash
 sudo apt install -y docker.io docker-compose-v2 git
 git clone https://github.com/pintodeveloper/AlpacAire.git && cd AlpacAire
 cp .env.example .env && nano .env          # claves reales
-sudo docker compose up -d --build           # o, con imágenes de GHCR:
-# sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+sudo docker compose up -d --build
 ```
-
-Abre el puerto 8080 (o 80 con el archivo prod) en el grupo de seguridad. Los datos viven en el volumen `pgdata`.
-Si las imágenes de GHCR son privadas, haz `docker login ghcr.io` en el servidor o márcalas como públicas.
 
 ## Estructura
 

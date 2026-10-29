@@ -47,7 +47,10 @@ services:
       INTERVALO_S: "5"
 
   web:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_DEMO_PASSWORD: ${DEMO_PASSWORD:-Coqueta2026!}
     restart: unless-stopped
     depends_on:
       - api

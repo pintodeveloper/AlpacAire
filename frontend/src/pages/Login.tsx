@@ -8,6 +8,9 @@ const DEMO = [
   ["ministerio", "Ministerio"], ["operario", "Operario"], ["obrero", "Obrero"],
 ];
 
+// Solo se muestra si el build define VITE_DEMO_PASSWORD (útil para el jurado de la hackatón).
+const DEMO_PASSWORD: string = import.meta.env.VITE_DEMO_PASSWORD ?? "";
+
 export default function Login() {
   const { login } = useSesion();
   const [usuario, setUsuario] = useState("");
@@ -41,15 +44,15 @@ export default function Login() {
             <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
           {error && <p className="error" role="alert">{error}</p>}
           <button className="btn btn--primario btn--ancho" disabled={enviando}>{enviando ? "Ingresando…" : "Ingresar"}</button>
-          <details className="login__demo">
+          {DEMO_PASSWORD && <details className="login__demo">
             <summary>Usuarios de demostración</summary>
-            <p>Contraseña de todos: <code>Coqueta2026!</code></p>
+            <p>Contraseña de todos: <code>{DEMO_PASSWORD}</code></p>
             <ul>
               {DEMO.map(([u, r]) => (
-                <li key={u}><button type="button" className="btn-texto" onClick={() => { setUsuario(u); setPassword("Coqueta2026!"); }}>{u}</button> {r}</li>
+                <li key={u}><button type="button" className="btn-texto" onClick={() => { setUsuario(u); setPassword(DEMO_PASSWORD); }}>{u}</button> {r}</li>
               ))}
             </ul>
-          </details>
+          </details>}
         </form>
       </section>
     </div>
