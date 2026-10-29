@@ -111,18 +111,13 @@ cd frontend; npm install; npm run dev     # http://localhost:5173
 > Para el desarrollo local, el puerto 5432 de la base no está publicado; agrega `ports: ["5432:5432"]` al
 > servicio `db` si lo necesitas.
 
-## Despliegue en Railway (recomendado)
+## Despliegue en Render (gratis)
 
-Un proyecto de Railway con 4 servicios, todos desde este repositorio:
+`render.yaml` crea un solo servicio web (la API sirve también el frontend y corre el simulador como hilo)
+y un PostgreSQL gratuito. En Render: **New → Blueprint →** este repositorio, y escribe `SEED_PASSWORD`.
 
-| Servicio (nombre exacto) | Origen | Root Directory | Variables |
-|---|---|---|---|
-| `Postgres` | Database → PostgreSQL | — | (las crea Railway) |
-| `api` | GitHub repo | `/backend` | `DATABASE_URL=${{Postgres.DATABASE_URL}}`, `GUNICORN_BIND=[::]:5000`, `JWT_SECRET_KEY`, `SENSOR_API_KEY`, `SEED_PASSWORD` |
-| `simulador` | GitHub repo | `/backend` | `MODO=simulador`, `API_URL=http://api.railway.internal:5000`, `SENSOR_API_KEY=${{api.SENSOR_API_KEY}}` |
-| `web` | GitHub repo | `/frontend` | `API_UPSTREAM=http://api.railway.internal:5000`, opcional `VITE_DEMO_PASSWORD` |
-
-Solo `web` lleva dominio público (Settings → Networking → Generate Domain). Cada push a `main` redespliega.
+Limitaciones del plan gratuito: el servicio se duerme tras 15 min sin visitas (tarda ~1 min en despertar y,
+mientras duerme, no se generan lecturas) y la base gratuita vence a los 30 días.
 
 ## Despliegue en un servidor propio
 

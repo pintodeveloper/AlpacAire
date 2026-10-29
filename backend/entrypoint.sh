@@ -23,5 +23,5 @@ for i in range(60):
         time.sleep(2)
 PY
 
-flask seed --dias "${SEED_DIAS:-30}"
-exec gunicorn -w "${GUNICORN_WORKERS:-3}" -b "${GUNICORN_BIND:-0.0.0.0:5000}" --timeout 120 --access-logfile - wsgi:app
+SIMULADOR_INTERNO=0 flask seed --dias "${SEED_DIAS:-30}"
+exec gunicorn -w "${GUNICORN_WORKERS:-3}" --threads "${GUNICORN_THREADS:-1}" -b "${GUNICORN_BIND:-0.0.0.0:${PORT:-5000}}" --timeout 120 --access-logfile - wsgi:app

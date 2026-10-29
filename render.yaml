@@ -1,0 +1,34 @@
+# Render Blueprint: New > Blueprint > este repositorio.
+services:
+  - type: web
+    name: alpacaire
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/salud
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: alpacaire-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: SENSOR_API_KEY
+        generateValue: true
+      - key: SEED_PASSWORD
+        sync: false
+      - key: SIMULADOR_INTERNO
+        value: "1"
+      - key: GUNICORN_WORKERS
+        value: "1"
+      - key: GUNICORN_THREADS
+        value: "8"
+      - key: SEED_DIAS
+        value: "7"
+
+databases:
+  - name: alpacaire-db
+    plan: free
+    databaseName: alpacaire
+    user: alpacaire

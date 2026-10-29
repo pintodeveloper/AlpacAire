@@ -49,6 +49,21 @@ def create_app():
     def _expirado(_h, _p):
         return jsonify(error="Tu sesión expiró. Inicia sesión de nuevo."), 401
 
+    # Despliegue de un solo servicio: Flask también entrega el frontend compilado.
+    static_dir = os.getenv("STATIC_DIR")
+    if static_dir and os.path.isdir(static_dir):
+        from flask import abort, send_from_directory
+
+        @app.get("/")
+        @app.get("/<path:ruta>")
+        def frontend(ruta=""):
+            if ruta.startswith("api/"):
+                abort(404)
+            archivo = os.path.join(static_dir, ruta)
+            if ruta and os.path.isfile(archivo):
+                return send_from_directory(static_dir, ruta, max_age=31536000 if ruta.startswith("assets/") else 0)
+            return send_from_directory(static_dir, "index.html", max_age=0)
+
     from .seed import register_cli
 
     register_cli(app)
