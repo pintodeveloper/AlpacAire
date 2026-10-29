@@ -20,10 +20,23 @@ USUARIOS = [
 
 FRENTES = [
     ("FN-01", "Frente Norte", "Manto Cuarenta, nivel 3", 120),
-    ("TS-02", "Tambor Sur", "Manto Cincuenta, avance", 165),
-    ("IP-03", "Inclinado Principal", "Vía de transporte y retorno de aire", 210),
-    ("TE-04", "Tajo Este", "Explotación por cámaras y pilares", 185),
+    ("FS-02", "Frente Sur", "Manto Cincuenta, avance", 165),
+    ("FE-03", "Frente Este", "Vía de transporte y retorno de aire", 210),
+    ("FO-04", "Frente Oeste", "Explotación por cámaras y pilares", 185),
 ]
+
+
+def sincronizar_frentes():
+    """Aplica nombres y códigos actuales a una base ya sembrada (en el mismo orden)."""
+    existentes = Frente.query.order_by(Frente.id).all()
+    cambios = 0
+    for f, (codigo, nombre, desc, prof) in zip(existentes, FRENTES):
+        if (f.codigo, f.nombre) != (codigo, nombre):
+            f.codigo, f.nombre, f.descripcion, f.profundidad_m = codigo, nombre, desc, prof
+            cambios += 1
+    if cambios:
+        db.session.commit()
+        click.echo(f"Frentes actualizados: {cambios}.")
 
 OPERARIOS = [
     ("Jhon Jairo Pabón", "Malacate eléctrico", "Día", 3),
@@ -60,6 +73,7 @@ EPISODIOS = [
 def sembrar(dias=30, paso_min=5):
     db.create_all()
     if Usuario.query.first():
+        sincronizar_frentes()
         click.echo("La base ya tiene datos: no se siembra de nuevo.")
         return
 

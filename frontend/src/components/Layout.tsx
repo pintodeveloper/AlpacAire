@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { audioListo, desbloquearAudio, silenciadaRestante, silenciar } from "../lib/alarm";
+import { audioListo, desbloquearAudio, reactivar, silenciadaRestante, silenciar, suscribir } from "../lib/alarm";
 import { fechaHora, iniciales } from "../lib/format";
 import { Link, useRouter } from "../lib/router";
 import { useSesion } from "../lib/session";
 import { Chevron } from "./Icons";
+import { HexFondo } from "./HexFondo";
 import { LogoMark } from "./Logo";
 
 const MENU = [
@@ -17,6 +18,12 @@ const MENU = [
     { to: "/obreros", label: "Obreros", permiso: "obreros" },
   ] },
   { grupo: "Exportar", items: [{ to: "/exportar", label: "Exportar PDF", permiso: "exportar" }] },
+];
+
+// Secciones sin subsecciones (por ahora): el título mismo es el enlace.
+const SECCIONES = [
+  { to: "/normatividad", label: "Normatividad y políticas" },
+  { to: "/formatos", label: "Formatos" },
 ];
 
 const ESTADO_TXT = { normal: "Todo en orden", alerta: "Alerta", peligro: "Evacuación" } as const;
@@ -34,19 +41,22 @@ function AvisoSonido() {
   const { estado } = useSesion();
   const [, forzar] = useState(0);
   useEffect(() => {
-    const id = window.setInterval(() => forzar((n) => n + 1), 1000);
-    return () => window.clearInterval(id);
+    const repintar = () => forzar((n) => n + 1);
+    const quitar = suscribir(repintar);
+    const id = window.setInterval(repintar, 1000);
+    return () => { quitar(); window.clearInterval(id); };
   }, []);
   if (estado?.nivel !== "peligro") return null;
   const resta = silenciadaRestante();
   return (
     <div className="aviso-sonido" role="status">
-      {!audioListo() ? (
-        <button className="btn btn--peligro" onClick={() => { desbloquearAudio(); forzar((n) => n + 1); }}>
-          Activar sonido de alarma
-        </button>
-      ) : resta > 0 ? (
-        <span>Sirena silenciada {Math.ceil(resta / 1000)} s</span>
+      {resta > 0 ? (
+        <>
+          <span>Sirena silenciada, vuelve a sonar en {Math.ceil(resta / 1000)} s</span>
+          <button className="btn btn--claro" onClick={reactivar}>Reactivar ahora</button>
+        </>
+      ) : !audioListo() ? (
+        <button className="btn btn--peligro" onClick={desbloquearAudio}>Activar sonido de alarma</button>
       ) : (
         <button className="btn btn--claro" onClick={() => silenciar(60_000)}>Silenciar 1 min</button>
       )}
@@ -64,7 +74,8 @@ export function Layout({ children }: { children: ReactNode }) {
   const nivel = estado?.nivel;
 
   return (
-    <div className={`app ${nivel === "peligro" ? "app--peligro" : ""}`}>
+    <div className={`app app--${nivel ?? "cargando"}`}>
+      <HexFondo />
       <aside className={`menu ${menuMovil ? "menu--abierto" : ""}`} aria-label="Menú principal">
         <div className="menu__usuario">
           <span className="avatar" aria-hidden="true">{iniciales(usuario.nombre)}</span>
@@ -100,6 +111,11 @@ export function Layout({ children }: { children: ReactNode }) {
               </div>
             );
           })}
+          {SECCIONES.map((sec) => (
+            <div key={sec.to} className="menu__grupo">
+              <Link to={sec.to} className="menu__titulo menu__seccion">{sec.label}</Link>
+            </div>
+          ))}
         </nav>
 
         <div className="menu__pie">

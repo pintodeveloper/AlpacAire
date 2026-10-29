@@ -13,7 +13,7 @@ from app.simulacion import ESCENARIOS, Generador
 API = os.getenv("API_URL", "http://api:5000").rstrip("/")
 KEY = os.getenv("SENSOR_API_KEY", "sensor-dev-key")
 INTERVALO = float(os.getenv("INTERVALO_S", "5"))
-CODIGOS = os.getenv("FRENTES", "FN-01,TS-02,IP-03,TE-04").split(",")
+CODIGOS = os.getenv("FRENTES", "FN-01,FS-02,FE-03,FO-04").split(",")
 H = {"X-API-Key": KEY}
 
 

@@ -53,7 +53,7 @@ docker compose down -v              # detener y BORRAR la base de datos
 | Detalles (gráficas)| ✔ | ✔ | ✔ | ✔ | ✔ |   |
 | Operarios / Obreros| ✔ (edita) | ✔ (edita) | ✔ | ✔ |   |   |
 | Exportar PDF / CSV | ✔ | ✔ | ✔ | ✔ |   |   |
-| Observaciones      | lee | escribe | | escribe | | |
+| Normatividad y políticas, Formatos | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
 | Simulador / usuarios | ✔ | | | | | |
 
 Los permisos viven en `backend/app/auth.py` (`PERMISOS`).

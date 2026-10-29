@@ -8,6 +8,7 @@ import Exportar from "./pages/Exportar";
 import Frentes from "./pages/Frentes";
 import Login from "./pages/Login";
 import Personal from "./pages/Personal";
+import Seccion from "./pages/Seccion";
 import Situacion from "./pages/Situacion";
 
 const RUTAS: Record<string, { permiso: string; el: () => ReactElement; titulo: string }> = {
@@ -18,6 +19,14 @@ const RUTAS: Record<string, { permiso: string; el: () => ReactElement; titulo: s
   "/obreros": { permiso: "obreros", el: () => <Personal tipo="obrero" />, titulo: "Obreros" },
   "/exportar": { permiso: "exportar", el: () => <Exportar />, titulo: "Exportar PDF" },
   "/ayuda": { permiso: "situacion", el: () => <Ayuda />, titulo: "Ayuda" },
+  "/normatividad": {
+    permiso: "situacion", titulo: "Normatividad y políticas",
+    el: () => <Seccion titulo="Normatividad y políticas" descripcion="Decretos, resoluciones y políticas internas de seguridad que aplican a la mina." />,
+  },
+  "/formatos": {
+    permiso: "situacion", titulo: "Formatos",
+    el: () => <Seccion titulo="Formatos" descripcion="Formatos de inspección, permisos de trabajo y registros de la operación." />,
+  },
 };
 
 export default function App() {

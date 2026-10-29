@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { IconAlarm, IconCheck, IconWarning } from "../components/Icons";
+import { HexRacimo } from "../components/HexFondo";
 import { Portal } from "../components/Portal";
 import { api } from "../lib/api";
-import { fechaHora, hace, hora } from "../lib/format";
+import { hace, hora } from "../lib/format";
 import { Link } from "../lib/router";
 import { useSesion } from "../lib/session";
-import type { Accion, Observacion } from "../lib/types";
+import type { Accion } from "../lib/types";
 
 const NIVEL_TXT: Record<string, string> = { normal: "Normal", alerta: "Alerta", peligro: "Peligro", sin_datos: "Sin datos" };
 
@@ -13,48 +14,6 @@ function agrupar(acciones: Accion[]) {
   const m = new Map<string, Accion[]>();
   acciones.forEach((a) => m.set(a.frente ?? "", [...(m.get(a.frente ?? "") ?? []), a]));
   return [...m.entries()];
-}
-
-function Observaciones() {
-  const { puede } = useSesion();
-  const [lista, setLista] = useState<Observacion[]>([]);
-  const [texto, setTexto] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const cargar = () => api.get<Observacion[]>("/api/observaciones").then(setLista).catch((e) => setError(e.message));
-  useEffect(() => { cargar(); const id = setInterval(cargar, 30_000); return () => clearInterval(id); }, []);
-
-  const enviar = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try { await api.post("/api/observaciones", { texto }); setTexto(""); cargar(); }
-    catch (err) { setError((err as Error).message); }
-  };
-  const leida = async (id: number) => { await api.post(`/api/observaciones/${id}/leida`); cargar(); };
-
-  return (
-    <section className="panel">
-      <h3 className="panel__titulo">Observaciones para el ingeniero</h3>
-      {puede("escribir_observaciones") && (
-        <form className="observacion-form" onSubmit={enviar}>
-          <label htmlFor="obs" className="sr-only">Nueva observación</label>
-          <textarea id="obs" rows={2} value={texto} onChange={(e) => setTexto(e.target.value)}
-            placeholder="Ej.: Revisar el sostenimiento del Tambor Sur antes del turno de la noche." />
-          <button className="btn btn--primario" disabled={!texto.trim()}>Enviar observación</button>
-        </form>
-      )}
-      {error && <p className="error">{error}</p>}
-      {lista.length === 0 ? <p className="tenue">No hay observaciones registradas.</p> : (
-        <ul className="observaciones">
-          {lista.map((o) => (
-            <li key={o.id} className={o.leida ? "leida" : ""}>
-              <p>{o.texto}</p>
-              <span>{o.autor} ({o.autor_rol}), {fechaHora(o.ts)}</span>
-              {puede("usuarios") && !o.leida && <button className="btn-texto" onClick={() => leida(o.id)}>Marcar como leída</button>}
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  );
 }
 
 function ModoDemo() {
@@ -88,6 +47,7 @@ export default function Situacion() {
   return (
     <div className="situacion">
       <section className={`estado estado--${nivel}`} aria-live="assertive">
+        <HexRacimo className="estado__hex" />
         <Portal nivel={nivel}>
           {nivel === "normal" ? <IconCheck size={84} /> : nivel === "alerta" ? <IconWarning size={84} /> : <IconAlarm size={88} />}
         </Portal>
@@ -154,7 +114,6 @@ export default function Situacion() {
         </ul>
       </section>
 
-      {puede("observaciones") && <Observaciones />}
       {puede("usuarios") && <ModoDemo />}
     </div>
   );

@@ -3,10 +3,10 @@ import { useSesion } from "../lib/session";
 import { VARS_PRINCIPALES } from "../lib/types";
 
 const ROLES = [
-  ["Ingeniero", "Administra la plataforma, el personal y el simulador. Recibe las observaciones del Ministerio y de SST."],
-  ["Supervisor SST", "Vigila las condiciones, gestiona el personal, exporta reportes y deja observaciones al ingeniero."],
+  ["Ingeniero", "Administra la plataforma, el personal y el simulador."],
+  ["Supervisor SST", "Vigila las condiciones, gestiona el personal y exporta reportes."],
   ["Dueño de la mina", "Consulta todo el estado de la mina y exporta reportes."],
-  ["Ministerio de Minas", "Supervisa la operación en modo consulta y envía información al ingeniero."],
+  ["Ministerio de Minas", "Supervisa la operación en modo consulta y exporta reportes."],
   ["Operario", "Consulta la situación actual, los frentes y las gráficas de detalle."],
   ["Obrero", "Consulta la situación actual y los valores de los frentes."],
 ];
