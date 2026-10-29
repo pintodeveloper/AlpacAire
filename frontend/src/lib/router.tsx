@@ -25,13 +25,13 @@ export function Link({ to, children, ...rest }: { to: string } & AnchorHTMLAttri
     <a
       href={to}
       aria-current={path === to ? "page" : undefined}
+      {...rest}
       onClick={(e) => {
         if (e.metaKey || e.ctrlKey || e.button !== 0) return;
         e.preventDefault();
         navigate(to);
         rest.onClick?.(e);
       }}
-      {...rest}
     >
       {children}
     </a>

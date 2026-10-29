@@ -749,3 +749,52 @@ a { color: inherit; }
   .evento { grid-template-columns: 1fr; gap: 6px; }
   .indice ol { columns: 1; }
 }
+
+/* ------------------------------------------------------------- documentos */
+.documentos + .documentos { margin-top: 18px; }
+.doc-botones { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 10px; }
+.doc-boton {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px; text-decoration: none;
+  border: 1px solid var(--veta); border-radius: var(--radio); background: var(--superficie);
+  transition: border-color .15s, background .15s;
+}
+.doc-boton:hover { border-color: var(--pizarra); background: var(--roca); }
+.doc-boton > span:not(.doc-boton__codigo) { flex: 1; min-width: 0; }
+.doc-boton strong { display: block; font: 700 17px/1.2 var(--cond); color: var(--carbon); }
+.doc-boton span span { display: block; font-size: 13.5px; color: var(--tenue); margin-top: 2px; }
+.doc-boton__flecha { flex: none; color: var(--pizarra); }
+.doc-boton__codigo {
+  flex: none; min-width: 64px; text-align: center; padding: 6px 8px; border-radius: var(--radio);
+  background: var(--pizarra); color: #fff; font: 700 14px var(--cond); letter-spacing: .02em;
+}
+.volver { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: var(--pizarra); text-underline-offset: 3px; }
+.volver::before { content: "‹"; font-size: 20px; line-height: 1; text-decoration: none; }
+
+/* Plano */
+.plano { display: grid; place-items: center; }
+.plano__enlace { display: block; width: 100%; max-width: 760px; cursor: zoom-in; }
+.plano img { display: block; width: 100%; height: auto; max-height: 78vh; object-fit: contain; }
+
+/* Cronograma CH-CM */
+.leyenda--cm { margin-bottom: 14px; align-items: center; }
+.leyenda--cm li { display: inline-flex; align-items: center; gap: 6px; }
+.cm-tipo, .cm-marca { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 4px; font: 700 12.5px var(--cond); }
+.cm-tipo--P, .cm-marca--P { background: var(--pizarra); color: #fff; }
+.cm-tipo--C, .cm-marca--C { background: var(--seguro); color: #fff; }
+.cm-tipo--I, .cm-marca--I { background: var(--alerta); color: var(--carbon); }
+.cm-marca { width: 16px; height: 16px; font-size: 10.5px; border-radius: 3px; }
+.cm-hoy-muestra { display: inline-block; width: 16px; height: 16px; border-radius: 3px; background: var(--alerta-suave); outline: 2px solid var(--alerta); }
+.cm-envoltura { border: 0; }
+.cm { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.cm th, .cm td { padding: 4px 3px; border-bottom: 1px solid var(--roca); text-align: center; white-space: nowrap; }
+.cm th { font-weight: 600; color: var(--tenue); background: var(--superficie); }
+.cm__mes { border-left: 1px solid var(--veta); font-size: 12px; }
+.cm__sem { font-weight: 500 !important; font-size: 11px; min-width: 20px; }
+.cm__fija { position: sticky; left: 0; background: var(--superficie); z-index: 1; text-align: left !important; padding-right: 10px !important; }
+.cm__objeto { left: 66px; white-space: normal !important; min-width: 230px; max-width: 260px; border-right: 1px solid var(--veta); }
+.cm td.cm__fija:first-child, .cm th.cm__fija:first-child { min-width: 66px; }
+.cm__celda { height: 30px; }
+.cm__hoy { background: var(--alerta-suave) !important; }
+.cm-semana { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14.5px; }
+.cm-semana li { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.btn { text-decoration: none; }

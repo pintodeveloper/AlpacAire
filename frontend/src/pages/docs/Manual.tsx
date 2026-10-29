@@ -14,8 +14,8 @@ const SECCIONES: { id: string; titulo: string; cuerpo: ReactNode }[] = [
             <tr><td><strong>Supervisor SST</strong></td><td>Consulta todo, edita operarios y obreros y exporta reportes.</td></tr>
             <tr><td><strong>Dueño de la mina</strong></td><td>Consulta todo y exporta reportes.</td></tr>
             <tr><td><strong>Ministerio de Minas</strong></td><td>Supervisa en modo consulta y exporta reportes.</td></tr>
-            <tr><td><strong>Operario</strong></td><td>Situación actual, frentes, detalles, historial, normatividad y formatos.</td></tr>
-            <tr><td><strong>Obrero</strong></td><td>Situación actual, frentes, historial, normatividad y formatos.</td></tr>
+            <tr><td><strong>Operario</strong></td><td>Situación actual, frentes, detalles, historial y documentos.</td></tr>
+            <tr><td><strong>Obrero</strong></td><td>Situación actual, frentes, historial y documentos.</td></tr>
           </tbody>
         </table>
       </div>
@@ -82,17 +82,23 @@ const SECCIONES: { id: string; titulo: string; cuerpo: ReactNode }[] = [
     </>),
   },
   {
-    id: "normatividad", titulo: "Normatividad y políticas",
+    id: "documentos", titulo: "Documentos",
     cuerpo: (<>
-      <p>Documentos del sistema para consulta: partes interesadas, flujo de monitoreo y respuesta, procesos misionales, matriz de EPP, matriz de requisitos legales y plan de capacitación.</p>
+      <p>En el menú, <em>Documentos</em> abre una página con dos bloques. Toca cualquier botón para abrir el documento; en cada uno, <strong>Volver a Documentos</strong> te regresa al listado.</p>
+      <dl className="definiciones">
+        <div><dt>Normatividad y políticas</dt><dd>Documentos de consulta: partes interesadas, flujo de monitoreo y respuesta, procesos misionales, matriz de EPP, matriz de requisitos legales, plan de capacitación y el plano del sistema de gases (se puede abrir en tamaño completo o descargar en PDF).</dd></div>
+        <div><dt>Formatos</dt><dd>Listas para llenar en pantalla, identificadas con su código: CH-EPP (uso del EPP en campo), CH-MT (control y mantenimiento del prototipo), CH-SP (verificación en campo de la capacitación del personal), CH-CM (cronograma anual de mantenimiento), entrada y salida de la mina, seguimiento de KPI del dispositivo y este manual.</dd></div>
+      </dl>
     </>),
   },
   {
-    id: "formatos", titulo: "Formatos",
+    id: "formatos", titulo: "Cómo llenar un formato",
     cuerpo: (<>
-      <p>Listas para llenar en pantalla: chequeo de entrada y salida, checklist del supervisor, checklist de EPP, checklist de mantenimiento y seguimiento de KPI del dispositivo.</p>
       <ul>
-        <li>Marca cada punto con los botones (Sí, No, N/A o Bueno, Malo…). Los resultados y el veredicto se calculan solos.</li>
+        <li>Completa los datos del encabezado (nombre, fecha, cargo o responsable).</li>
+        <li>Marca cada punto con los botones (Sí, No, N/A; Bueno, Malo, Incompleto…). Los resultados y el veredicto se calculan solos.</li>
+        <li>En CH-EPP, al elegir el cargo se marca qué elementos son obligatorios para ese rol. En CH-MT puedes filtrar los puntos por frecuencia (diario, semanal, quincenal, mensual).</li>
+        <li>CH-CM no se llena: muestra en qué semanas del año toca cada mantenimiento y resalta lo programado para la semana actual.</li>
         <li>Lo escrito se guarda en este navegador mientras no pulses <strong>Limpiar formato</strong>.</li>
         <li><strong>Imprimir o guardar PDF</strong> abre la impresión del navegador; elige "Guardar como PDF" para archivarlo y firmarlo.</li>
       </ul>
@@ -109,7 +115,7 @@ const SECCIONES: { id: string; titulo: string; cuerpo: ReactNode }[] = [
     cuerpo: (
       <dl className="definiciones">
         <div><dt>"No hay conexión con el servidor"</dt><dd>La pantalla no alcanza la API. Revisa la red de la mina; los datos vuelven solos cuando regresa la conexión.</dd></div>
-        <div><dt>Un frente aparece como "Sin datos"</dt><dd>Sus sensores no reportan hace más de 30 segundos. Verifica la estación del frente y los repetidores (ver checklist de mantenimiento).</dd></div>
+        <div><dt>Un frente aparece como "Sin datos"</dt><dd>Sus sensores no reportan hace más de 30 segundos. Verifica la estación del frente y los repetidores (formato CH-MT).</dd></div>
         <div><dt>No suena la sirena</dt><dd>Pulsa <em>Activar sonido de alarma</em> y revisa que el volumen del equipo no esté silenciado.</dd></div>
         <div><dt>"Tu sesión expiró"</dt><dd>Vuelve a ingresar con tu usuario y contraseña.</dd></div>
       </dl>

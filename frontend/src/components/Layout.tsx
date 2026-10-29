@@ -19,22 +19,7 @@ const MENU = [
     { to: "/obreros", label: "Obreros", permiso: "obreros" },
   ] },
   { grupo: "Exportar", items: [{ to: "/exportar", label: "Exportar PDF", permiso: "exportar" }] },
-  { grupo: "Normatividad y políticas", items: [
-    { to: "/normatividad/partes-interesadas", label: "Partes interesadas", permiso: "situacion" },
-    { to: "/normatividad/flujo-monitoreo", label: "Flujo monitoreo", permiso: "situacion" },
-    { to: "/normatividad/procesos-misionales", label: "Procesos misionales", permiso: "situacion" },
-    { to: "/normatividad/matriz-epp", label: "Matriz EPP", permiso: "situacion" },
-    { to: "/normatividad/matriz-requisitos", label: "Matriz requisitos", permiso: "situacion" },
-    { to: "/normatividad/plan-capacitacion", label: "Plan capacitación", permiso: "situacion" },
-  ] },
-  { grupo: "Formatos", items: [
-    { to: "/formatos/lista-chequeo", label: "Lista de chequeo", permiso: "situacion" },
-    { to: "/formatos/checklist-supervisor", label: "Checklist supervisor", permiso: "situacion" },
-    { to: "/formatos/checklist-epp", label: "Checklist EPP", permiso: "situacion" },
-    { to: "/formatos/checklist-mantenimiento", label: "Checklist mantenimiento", permiso: "situacion" },
-    { to: "/formatos/seguimiento-kpi", label: "Seguimiento KPI", permiso: "situacion" },
-    { to: "/formatos/manual-usuario", label: "Manual del usuario", permiso: "situacion" },
-  ] },
+  { grupo: "Documentos", items: [{ to: "/documentos", label: "Documentos", permiso: "situacion" }] },
 ];
 
 const ESTADO_TXT = { normal: "Todo en orden", alerta: "Alerta", peligro: "Evacuación" } as const;
@@ -80,13 +65,12 @@ export function Layout({ children }: { children: ReactNode }) {
   const { path } = useRouter();
   const [abiertos, setAbiertos] = useState<Record<string, boolean>>(() => ({
     Principal: true, Roles: true, Exportar: true,
-    "Normatividad y políticas": window.location.pathname.startsWith("/normatividad"),
-    Formatos: window.location.pathname.startsWith("/formatos"),
+    Documentos: true,
   }));
   const [menuMovil, setMenuMovil] = useState(false);
   useEffect(() => {
     setMenuMovil(false);
-    const g = MENU.find((m) => m.items.some((i) => i.to === path));
+    const g = MENU.find((m) => m.items.some((i) => i.to === path || (i.to === "/documentos" && /^\/(normatividad|formatos)\//.test(path))));
     if (g) setAbiertos((a) => (a[g.grupo] ? a : { ...a, [g.grupo]: true }));
   }, [path]);
   if (!usuario) return null;
@@ -119,7 +103,8 @@ export function Layout({ children }: { children: ReactNode }) {
                   <ul>
                     {visibles.map((i) => (
                       <li key={i.to}>
-                        <Link to={i.to} className="menu__link">
+                        <Link to={i.to} className="menu__link"
+                          aria-current={path === i.to || (i.to === "/documentos" && /^\/(normatividad|formatos)\//.test(path)) ? "page" : undefined}>
                           {i.label}
                           {i.to === "/situacion" && nivel && <span className={`punto punto--${nivel}`} aria-label={ESTADO_TXT[nivel]} />}
                         </Link>

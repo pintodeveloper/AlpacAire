@@ -9,6 +9,7 @@ import Frentes from "./pages/Frentes";
 import Login from "./pages/Login";
 import Personal from "./pages/Personal";
 import { ChecklistEPP, ChecklistMantenimiento, ChecklistSupervisor, ListaChequeo, SeguimientoKPI } from "./pages/docs/Formatos";
+import { CronogramaMantenimiento, Documentos, SistemaGases } from "./pages/docs/Documentos";
 import { ManualUsuario } from "./pages/docs/Manual";
 import Historial from "./pages/Historial";
 import { FlujoMonitoreo, MatrizEPP, MatrizRequisitos, PartesInteresadas, PlanCapacitacion, ProcesosMisionales } from "./pages/docs/Normatividad";
@@ -34,6 +35,9 @@ const RUTAS: Record<string, { permiso: string; el: () => ReactElement; titulo: s
   "/formatos/checklist-mantenimiento": { permiso: "situacion", el: () => <ChecklistMantenimiento />, titulo: "Checklist mantenimiento" },
   "/formatos/seguimiento-kpi": { permiso: "situacion", el: () => <SeguimientoKPI />, titulo: "Seguimiento KPI" },
   "/formatos/manual-usuario": { permiso: "situacion", el: () => <ManualUsuario />, titulo: "Manual del usuario" },
+  "/documentos": { permiso: "situacion", el: () => <Documentos />, titulo: "Documentos" },
+  "/normatividad/sistema-gases": { permiso: "situacion", el: () => <SistemaGases />, titulo: "Sistema de gases" },
+  "/formatos/cronograma-mantenimiento": { permiso: "situacion", el: () => <CronogramaMantenimiento />, titulo: "Cronograma de mantenimiento" },
   "/historial": { permiso: "situacion", el: () => <Historial />, titulo: "Historial" },
 };
 
@@ -43,8 +47,7 @@ export default function App() {
   const ruta = RUTAS[path];
 
   useEffect(() => {
-    if (path === "/normatividad") return navigate("/normatividad/partes-interesadas");
-    if (path === "/formatos") return navigate("/formatos/lista-chequeo");
+    if (path === "/normatividad" || path === "/formatos") return navigate("/documentos");
     if (usuario && (!ruta || !puede(ruta.permiso))) navigate("/situacion");
   }, [usuario, path]); // eslint-disable-line
 

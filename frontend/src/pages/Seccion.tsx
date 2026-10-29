@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "../lib/router";
 
 /** Encabezado común de los documentos y formatos. */
 export default function Seccion({ titulo, meta, descripcion, acciones, children, ancho = false }: {
@@ -6,6 +7,7 @@ export default function Seccion({ titulo, meta, descripcion, acciones, children,
 }) {
   return (
     <div className={`pagina doc ${ancho ? "" : "pagina--estrecha"}`}>
+      <Link to="/documentos" className="volver no-imprimir">Volver a Documentos</Link>
       <div className="pagina__cabeza pagina__cabeza--fila">
         <div>
           <h2>{titulo}</h2>

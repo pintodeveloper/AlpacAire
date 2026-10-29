@@ -225,3 +225,22 @@ export const MANTENIMIENTO: { titulo: string; items: { id: string; punto: string
     { id: "4.3", punto: "¿El sistema UPS de respaldo y la sirena general responden ante cortes?", frecuencia: "Mensual", criterio: "Continuidad de operación 24/7 en superficie" },
   ] },
 ];
+
+// ------------------------------------------------------------ Formato CH-CM: cronograma anual de mantenimiento 2026
+// "semanas": 52 caracteres, uno por semana; "." = nada programado, letra = tipo marcado en esa semana.
+export const CM_TIPOS: Record<string, string> = { P: "Programado / preventivo", C: "Calibración normativa (Decreto 1886 de 2015)", I: "Inspección de rutina" };
+export const CM_MESES: [string, number][] = [["Enero", 1], ["Febrero", 5], ["Marzo", 9], ["Abril", 14], ["Mayo", 18], ["Junio", 23], ["Julio", 27], ["Agosto", 31], ["Septiembre", 36], ["Octubre", 40], ["Noviembre", 44], ["Diciembre", 49]];
+export const CRONOGRAMA: { codigo: string; objeto: string; it: string; tm: string; semanas: string }[] = [
+  { codigo: "ALP-101", objeto: "Filtros PTFE / bronce y microbomba 12 V", it: "IT-01", tm: "P", semanas: "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP" },
+  { codigo: "ALP-102", objeto: "Caja IP67, sellos y prensaestopas de sensado", it: "IT-02", tm: "I", semanas: "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP" },
+  { codigo: "ALP-103", objeto: "Alarmas locales (sirena y luz LED de frente)", it: "IT-03", tm: "P", semanas: "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP" },
+  { codigo: "ALP-104", objeto: "Bump test a sensores electroquímicos (CO, O₂, H₂S)", it: "IT-04", tm: "I", semanas: "PPPPPPPPPPPPPPPPPIPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP" },
+  { codigo: "ALP-201", objeto: "Calibración cero/span NDIR (CH₄ y CO₂) con gas patrón", it: "IT-05", tm: "C", semanas: "...P...P....P...P....P...P...P....P...P...P....P...P" },
+  { codigo: "ALP-202", objeto: "Verificación de sensores de clima (SHT35, BMP388, anemómetro)", it: "IT-06", tm: "P", semanas: ".P...P...P....P...P....P...P...P....P...P...P....P.." },
+  { codigo: "ALP-203", objeto: "Inspección de manguera HDPE 1\" en cuneta (2.000 m)", it: "IT-07", tm: "I", semanas: "..P...P...P....P...P....P...P...P....P...P...P....P." },
+  { codigo: "ALP-204", objeto: "Comprobación de enlace RS-485 / ESP-NOW en nodos", it: "IT-08", tm: "P", semanas: "P...P...P....P...P....P...P...P....P...P...P....P..." },
+  { codigo: "ALP-301", objeto: "Prueba de carga y descarga de baterías LiFePO4 de repetidores", it: "IT-09", tm: "P", semanas: "............P............P............P............P" },
+  { codigo: "ALP-302", objeto: "Prueba de autonomía de UPS y servidor Raspberry Pi 5", it: "IT-10", tm: "P", semanas: "............P............P............P............P" },
+  { codigo: "ALP-401", objeto: "Reemplazo de celdas electroquímicas afectadas", it: "IT-11", tm: "P", semanas: ".........................P.........................P" },
+  { codigo: "ALP-402", objeto: "Mantenimiento general de cuneta y cableado blindado", it: "IT-12", tm: "P", semanas: ".........................P.........................P" },
+];
