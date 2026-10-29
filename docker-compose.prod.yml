@@ -1,0 +1,15 @@
+# Despliegue con las imágenes que publica GitHub Actions (sin compilar en el servidor).
+# Uso: docker compose -f docker-compose.yml -f docker-compose.prod.yml pull && \
+#      docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+services:
+  api:
+    image: ghcr.io/pintodeveloper/alpacaire-api:latest
+    build: !reset null
+  simulator:
+    image: ghcr.io/pintodeveloper/alpacaire-api:latest
+    build: !reset null
+  web:
+    image: ghcr.io/pintodeveloper/alpacaire-web:latest
+    build: !reset null
+    ports:
+      - "80:80"

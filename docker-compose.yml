@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: alpacaire
+      POSTGRES_USER: alpacaire
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-alpacaire}
+      TZ: America/Bogota
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # datos persistentes
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alpacaire -d alpacaire"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://alpacaire:${DB_PASSWORD:-alpacaire}@db:5432/alpacaire
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-cambia-esta-clave-en-produccion-alpacaire}
+      SENSOR_API_KEY: ${SENSOR_API_KEY:-sensor-dev-key}
+      SEED_PASSWORD: ${SEED_PASSWORD:-Coqueta2026!}
+      MINA_NOMBRE: 'Mina "La coqueta"'
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:5000/api/salud')"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  simulator:
+    build: ./backend
+    restart: unless-stopped
+    command: ["python", "simulator.py"]
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      API_URL: http://api:5000
+      SENSOR_API_KEY: ${SENSOR_API_KEY:-sensor-dev-key}
+      INTERVALO_S: "5"
+
+  web:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "${WEB_PORT:-8080}:80"
+
+volumes:
+  pgdata:
